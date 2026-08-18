@@ -1,0 +1,32 @@
+/* 지도 줌(+/-) 컨트롤을 오른쪽 아래로 이동 */
+.map-screen .leaflet-top.leaflet-left {
+  top: auto !important;
+  left: auto !important;
+  right: 20px !important;
+  bottom: 22px !important;
+}
+
+.map-screen .leaflet-top.leaflet-left .leaflet-control {
+  margin: 0 !important;
+}
+
+/* 줌 버튼만 살짝 떠 보이도록 정리 */
+.map-screen .leaflet-control-zoom {
+  border: 1px solid rgba(31, 53, 43, 0.12) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(20, 40, 31, 0.14) !important;
+}
+
+.map-screen .leaflet-control-zoom a {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 32px !important;
+}
+
+@media (max-width: 900px) {
+  .map-screen .leaflet-top.leaflet-left {
+    right: 14px !important;
+    bottom: 16px !important;
+  }
+}

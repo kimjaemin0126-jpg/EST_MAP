@@ -3,6 +3,7 @@ import Header from './components/Header'
 import SeoulMap from './components/SeoulMap'
 import DongDetailPanel from './components/DongDetailPanel'
 import DetailDashboard from './components/DetailDashboard'
+import './styles/map-zoom-position.css'
 import { DATA_PATHS } from './config/dataPaths'
 import {
   fetchJsonCached,

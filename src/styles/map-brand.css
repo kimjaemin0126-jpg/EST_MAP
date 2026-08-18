@@ -1,0 +1,49 @@
+
+/* Map screen brand lockup */
+.map-screen {
+  position: relative;
+}
+
+.map-screen .map-brand-lockup {
+  position: absolute;
+  top: 18px;
+  left: 28px;
+  z-index: 1600;
+  display: flex;
+  align-items: center;
+  width: 265px;
+  pointer-events: none;
+}
+
+.map-screen .map-brand-lockup img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Hide the original text brand only on the map screen.
+   Filters / controls in Header remain untouched. */
+.map-screen .app-header .brand-block {
+  visibility: hidden;
+  width: 265px;
+  min-width: 265px;
+}
+
+/* Detail analysis keeps its original header. */
+.detail-screen .map-brand-lockup {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .map-screen .map-brand-lockup {
+    top: 14px;
+    left: 18px;
+    width: 210px;
+  }
+
+  .map-screen .app-header .brand-block {
+    width: 210px;
+    min-width: 210px;
+  }
+}
