@@ -11,7 +11,7 @@ export const ANALYSIS_MODES = {
 }
 
 export const ANALYSIS_MODE_OPTIONS = [
-  { value: ANALYSIS_MODES.CLOSURE_RATE, label: '폐업 현황' },
+  { value: ANALYSIS_MODES.CLOSURE_RATE, label: '개폐업 현황' },
   { value: ANALYSIS_MODES.CLOSURE_CHANGE, label: '폐업 변화' },
   { value: ANALYSIS_MODES.NET_OPEN_CLOSE, label: '개폐업 순증감' },
   { value: ANALYSIS_MODES.MARKET_TYPE, label: '시장 유형' },
