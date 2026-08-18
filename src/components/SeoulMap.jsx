@@ -75,6 +75,31 @@ function MapZoomReporter({ onZoomChange }) {
   return null
 }
 
+function MapLayoutInvalidator({ detailLayoutOpen }) {
+  const map = useMap()
+
+  useEffect(() => {
+    const layout = map.getContainer().closest('.app-main')
+    let completed = false
+    const refreshMap = () => {
+      if (completed) return
+      completed = true
+      map.invalidateSize({ animate: false, pan: false })
+    }
+    const handleTransitionEnd = (event) => {
+      if (event.target === layout && event.propertyName === 'grid-template-columns') refreshMap()
+    }
+    layout?.addEventListener('transitionend', handleTransitionEnd)
+    const fallback = window.setTimeout(refreshMap, 320)
+    return () => {
+      layout?.removeEventListener('transitionend', handleTransitionEnd)
+      window.clearTimeout(fallback)
+    }
+  }, [detailLayoutOpen, map])
+
+  return null
+}
+
 export default function SeoulMap({
   quarter,
   industry,
@@ -85,6 +110,7 @@ export default function SeoulMap({
   onSelectDong,
   onSelectClosureDong,
   onSelectDistrict,
+  detailLayoutOpen,
 }) {
   const [hoveredDongCode, setHoveredDongCode] = useState(null)
   const [visibleLayers, setVisibleLayers] = useState(INITIAL_LAYERS)
@@ -301,6 +327,7 @@ export default function SeoulMap({
         )}
         <FitSeoulBounds geoData={geoData} />
         <MapZoomReporter onZoomChange={handleZoomChange} />
+        <MapLayoutInvalidator detailLayoutOpen={detailLayoutOpen} />
       </MapContainer>
 
       {!geoData && <div className="map-loading">지도를 불러오는 중입니다</div>}
