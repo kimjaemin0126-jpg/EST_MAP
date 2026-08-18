@@ -1,0 +1,88 @@
+/* 상권 지표 비교: 레이더와 실제 수치 표를 좌우 50:50으로 배치 */
+.compare-radar-card .compare-radar-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  min-height: 390px;
+}
+
+.compare-radar-card .compare-radar-canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 24px 28px;
+  border-right: 1px solid #e3e9e6;
+}
+
+.compare-radar-card .compare-radar-canvas svg {
+  display: block;
+  width: 100%;
+  max-width: 590px;
+  height: auto;
+}
+
+.compare-radar-card .compare-value-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  margin: 0;
+  border-top: 0;
+}
+
+.compare-radar-card .compare-value-table > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 1.05fr) minmax(100px, 1fr) minmax(100px, 1fr);
+  align-items: center;
+  min-height: 58px;
+  padding: 0 22px;
+  border-bottom: 1px solid #edf1ef;
+}
+
+.compare-radar-card .compare-value-table > div:last-child {
+  border-bottom: 0;
+}
+
+.compare-radar-card .compare-value-table .head {
+  min-height: 48px;
+  background: #f7faf8;
+  color: #6c7c74;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.compare-radar-card .compare-value-table > div > span:nth-child(2),
+.compare-radar-card .compare-value-table > div > span:nth-child(3),
+.compare-radar-card .compare-value-table strong {
+  text-align: right;
+}
+
+.compare-radar-card .compare-value-table > div:not(.head) > span {
+  color: #66766f;
+  font-size: 13px;
+}
+
+.compare-radar-card .compare-value-table strong {
+  color: #17231e;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+@media (max-width: 900px) {
+  .compare-radar-card .compare-radar-split {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .compare-radar-card .compare-radar-canvas {
+    border-right: 0;
+    border-bottom: 1px solid #e3e9e6;
+    padding: 18px 12px;
+  }
+
+  .compare-radar-card .compare-value-table > div {
+    grid-template-columns: minmax(90px, 1fr) minmax(85px, 1fr) minmax(85px, 1fr);
+    padding: 0 14px;
+  }
+}

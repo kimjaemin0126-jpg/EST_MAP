@@ -1,3 +1,4 @@
+import '../styles/ComparisonChartsSplit.css'
 function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum)
 }
@@ -32,29 +33,37 @@ export function MarketRadarComparison({ leftName, rightName, metrics }) {
         <div><span>연간 통계</span><h3>상권 지표 비교</h3></div>
         <div className="compare-legend"><span className="left"><i />{leftName}</span><span className="right"><i />{rightName}</span></div>
       </header>
-      <div className="compare-radar-canvas">
-        <svg viewBox="0 0 560 340" role="img" aria-label={`${leftName}과 ${rightName} 상권 지표 비교`}>
-          {[25, 50, 75, 100].map((level) => (
-            <polygon key={level} className="compare-radar-grid" points={polygonPoints(Array(total).fill(level), radius, centerX, centerY)} />
+      <div className="compare-radar-split">
+        <div className="compare-radar-canvas">
+          <svg viewBox="0 0 560 340" role="img" aria-label={`${leftName}과 ${rightName} 상권 지표 비교`}>
+            {[25, 50, 75, 100].map((level) => (
+              <polygon key={level} className="compare-radar-grid" points={polygonPoints(Array(total).fill(level), radius, centerX, centerY)} />
+            ))}
+            {metrics.map((metric, index) => {
+              const end = radarPoint(index, 100, total, centerX, centerY, radius)
+              const label = radarPoint(index, 100, total, centerX, centerY, radius + 30)
+              const anchor = label.x < centerX - 10 ? 'end' : label.x > centerX + 10 ? 'start' : 'middle'
+              return <g key={metric.key}><line className="compare-radar-axis" x1={centerX} y1={centerY} x2={end.x} y2={end.y} /><text className="compare-radar-label" x={label.x} y={label.y + 4} textAnchor={anchor}>{metric.label}</text></g>
+            })}
+            <polygon className="compare-radar-area left" points={polygonPoints(leftScores, radius, centerX, centerY)} />
+            <polygon className="compare-radar-area right" points={polygonPoints(rightScores, radius, centerX, centerY)} />
+            {metrics.map((metric, index) => {
+              const left = radarPoint(index, metric.leftScore, total, centerX, centerY, radius)
+              const right = radarPoint(index, metric.rightScore, total, centerX, centerY, radius)
+              return <g key={`${metric.key}-dots`}><circle className="compare-radar-dot left" cx={left.x} cy={left.y} r="4"><title>{`${leftName} ${metric.label}: ${metric.leftDisplay}`}</title></circle><circle className="compare-radar-dot right" cx={right.x} cy={right.y} r="4"><title>{`${rightName} ${metric.label}: ${metric.rightDisplay}`}</title></circle></g>
+            })}
+          </svg>
+        </div>
+        <div className="compare-value-table">
+          <div className="head"><span>지표</span><span>{leftName}</span><span>{rightName}</span></div>
+          {metrics.map((metric) => (
+            <div key={metric.key}>
+              <span>{metric.label}</span>
+              <strong>{metric.leftDisplay}</strong>
+              <strong>{metric.rightDisplay}</strong>
+            </div>
           ))}
-          {metrics.map((metric, index) => {
-            const end = radarPoint(index, 100, total, centerX, centerY, radius)
-            const label = radarPoint(index, 100, total, centerX, centerY, radius + 30)
-            const anchor = label.x < centerX - 10 ? 'end' : label.x > centerX + 10 ? 'start' : 'middle'
-            return <g key={metric.key}><line className="compare-radar-axis" x1={centerX} y1={centerY} x2={end.x} y2={end.y} /><text className="compare-radar-label" x={label.x} y={label.y + 4} textAnchor={anchor}>{metric.label}</text></g>
-          })}
-          <polygon className="compare-radar-area left" points={polygonPoints(leftScores, radius, centerX, centerY)} />
-          <polygon className="compare-radar-area right" points={polygonPoints(rightScores, radius, centerX, centerY)} />
-          {metrics.map((metric, index) => {
-            const left = radarPoint(index, metric.leftScore, total, centerX, centerY, radius)
-            const right = radarPoint(index, metric.rightScore, total, centerX, centerY, radius)
-            return <g key={`${metric.key}-dots`}><circle className="compare-radar-dot left" cx={left.x} cy={left.y} r="4"><title>{`${leftName} ${metric.label}: ${metric.leftDisplay}`}</title></circle><circle className="compare-radar-dot right" cx={right.x} cy={right.y} r="4"><title>{`${rightName} ${metric.label}: ${metric.rightDisplay}`}</title></circle></g>
-          })}
-        </svg>
-      </div>
-      <div className="compare-value-table">
-        <div className="head"><span>지표</span><span>{leftName}</span><span>{rightName}</span></div>
-        {metrics.map((metric) => <div key={metric.key}><span>{metric.label}</span><strong>{metric.leftDisplay}</strong><strong>{metric.rightDisplay}</strong></div>)}
+        </div>
       </div>
     </article>
   )
