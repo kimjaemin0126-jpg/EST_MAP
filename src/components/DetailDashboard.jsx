@@ -57,7 +57,6 @@ function MarketTypeGrid({ marketType }) {
         return (
           <div className={marketType?.key === key ? 'active' : ''} key={key}>
             <span>{type?.label}</span>
-            {marketType?.key === key && <em>선택 지역</em>}
           </div>
         )
       })}

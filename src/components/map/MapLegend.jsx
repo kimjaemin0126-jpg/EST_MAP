@@ -19,7 +19,12 @@ export default function MapLegend({ mode, thresholds }) {
       </div>
       <div className="legend-ranges">
         {config.levels.map((level, index) => (
-          <span key={level.key}><b>{level.label}</b><small>{getRangeLabel(index, thresholds, mode)}</small></span>
+          <span key={level.key}>
+            <b>{level.label.includes('·') ? level.label.split('·').map((part, partIndex, parts) => (
+              <span className="legend-label-line" key={`${level.key}-${part}`}>{part}{partIndex < parts.length - 1 ? '·' : ''}</span>
+            )) : level.label}</b>
+            <small>{getRangeLabel(index, thresholds, mode)}</small>
+          </span>
         ))}
       </div>
       <p>{mode === ANALYSIS_MODES.MARKET_TYPE ? '선택 조건의 서울 가중 기준' : '서울 행정동 상대 분포 기준'}</p>
