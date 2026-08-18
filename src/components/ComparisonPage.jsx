@@ -529,7 +529,7 @@ export default function ComparisonPage() {
         <div>
           <h1>두 지역 상권 통계 비교</h1>
         </div>
-        <a href="/">지도 화면으로 이동</a>
+        <a href="/map">지도 화면으로 이동</a>
       </header>
 
       <main className="comparison-content compact">

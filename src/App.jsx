@@ -17,11 +17,15 @@ import {
 
 const AVAILABLE_QUARTERS = Object.freeze(['20251', '20252', '20253', '20254'])
 
+function initialDongCode() {
+  return new URLSearchParams(window.location.search).get('region') || null
+}
+
 export default function App() {
   const [selectedQuarter, setSelectedQuarter] = useState('20251')
   const [selectedIndustry, setSelectedIndustry] = useState(ALL_INDUSTRIES)
   const [analysisMode, setAnalysisMode] = useState(ANALYSIS_MODES.CLOSURE_RATE)
-  const [selectedDongCode, setSelectedDongCode] = useState(null)
+  const [selectedDongCode, setSelectedDongCode] = useState(initialDongCode)
   const [selectedDistrict, setSelectedDistrict] = useState(null)
   const [viewMode, setViewMode] = useState('map')
   const [processed, setProcessed] = useState({})

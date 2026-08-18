@@ -4,10 +4,12 @@ export default function Header(props) {
   const { detailMode, onReturnToMap, onOpenComparison, ...filterProps } = props
   return (
     <header className={`app-header ${detailMode ? 'detail-header' : ''}`}>
-      <div className="brand-block">
-        <h1>서울 상권 변화 지도</h1>
-        <p>개업과 폐업의 흐름으로 보는 서울 상권</p>
-      </div>
+      <a className="brand-block" href="/" aria-label="POST MORTEM 시작 화면">
+        <span className="brand-logo-window" aria-hidden="true">
+          <img src="/assets/post-mortem-logo.png" alt="" />
+        </span>
+        <p>서울 상권 변화 지도</p>
+      </a>
       {detailMode ? (
         <div className="detail-header-actions">
           <span>지도 분석</span>

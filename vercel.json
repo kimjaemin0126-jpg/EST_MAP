@@ -10,7 +10,15 @@
   },
   "rewrites": [
     {
+      "source": "/map",
+      "destination": "/index.html"
+    },
+    {
       "source": "/comparison",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/scenario",
       "destination": "/index.html"
     }
   ]
