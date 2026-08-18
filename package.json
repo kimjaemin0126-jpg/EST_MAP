@@ -1,0 +1,30 @@
+{
+  "name": "est-map",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "predev": "npm run preprocess:closures",
+    "dev": "vite",
+    "prebuild": "npm run preprocess:closures",
+    "build": "vite build",
+    "preview": "vite preview",
+    "preprocess": "node scripts/preprocess.js",
+    "preprocess:closures": "node scripts/preprocess-closures.js",
+    "preprocess:districts": "node scripts/preprocess-district-boundaries.js"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.7.3",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
+    "papaparse": "^5.5.4",
+    "proj4": "^2.21.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-leaflet": "^5.0.0",
+    "shapefile": "^0.6.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.5",
+    "vite": "^8.2.1"
+  }
+}
