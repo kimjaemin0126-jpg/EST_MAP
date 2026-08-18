@@ -1,0 +1,60 @@
+/* 지역 비교 결과: AI 비교 + 상권 레이더를 한 화면에 50:50 배치 */
+.compare-results {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px !important;
+  align-items: stretch;
+}
+
+.compare-results > .compare-result-card {
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.compare-ai-card,
+.compare-radar-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.compare-ai-card .compare-ai-list {
+  flex: 1;
+}
+
+.compare-radar-card .compare-radar-canvas {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 360px;
+  padding: 18px 20px 22px;
+}
+
+.compare-radar-card .compare-radar-canvas svg {
+  display: block;
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+}
+
+/* 기존 하단 지표표는 완전히 숨김 */
+.compare-radar-card .compare-value-table {
+  display: none !important;
+}
+
+/* 카드 높이를 과도하게 늘리는 기존 split 규칙 무력화 */
+.compare-radar-card .compare-radar-split {
+  display: block !important;
+  min-height: 0 !important;
+}
+
+@media (max-width: 1050px) {
+  .compare-results {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-radar-card .compare-radar-canvas {
+    min-height: 320px;
+  }
+}

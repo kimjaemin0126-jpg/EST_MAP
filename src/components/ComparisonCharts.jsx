@@ -1,4 +1,4 @@
-import '../styles/ComparisonChartsSplit.css'
+import '../styles/comparison-results-compact.css'
 function clamp(value, minimum, maximum) {
   return Math.min(Math.max(value, minimum), maximum)
 }
@@ -33,8 +33,7 @@ export function MarketRadarComparison({ leftName, rightName, metrics }) {
         <div><span>연간 통계</span><h3>상권 지표 비교</h3></div>
         <div className="compare-legend"><span className="left"><i />{leftName}</span><span className="right"><i />{rightName}</span></div>
       </header>
-      <div className="compare-radar-split">
-        <div className="compare-radar-canvas">
+      <div className="compare-radar-canvas">
           <svg viewBox="0 0 560 340" role="img" aria-label={`${leftName}과 ${rightName} 상권 지표 비교`}>
             {[25, 50, 75, 100].map((level) => (
               <polygon key={level} className="compare-radar-grid" points={polygonPoints(Array(total).fill(level), radius, centerX, centerY)} />
@@ -53,17 +52,6 @@ export function MarketRadarComparison({ leftName, rightName, metrics }) {
               return <g key={`${metric.key}-dots`}><circle className="compare-radar-dot left" cx={left.x} cy={left.y} r="4"><title>{`${leftName} ${metric.label}: ${metric.leftDisplay}`}</title></circle><circle className="compare-radar-dot right" cx={right.x} cy={right.y} r="4"><title>{`${rightName} ${metric.label}: ${metric.rightDisplay}`}</title></circle></g>
             })}
           </svg>
-        </div>
-        <div className="compare-value-table">
-          <div className="head"><span>지표</span><span>{leftName}</span><span>{rightName}</span></div>
-          {metrics.map((metric) => (
-            <div key={metric.key}>
-              <span>{metric.label}</span>
-              <strong>{metric.leftDisplay}</strong>
-              <strong>{metric.rightDisplay}</strong>
-            </div>
-          ))}
-        </div>
       </div>
     </article>
   )

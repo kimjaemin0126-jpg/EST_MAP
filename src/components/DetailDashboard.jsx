@@ -212,12 +212,11 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
               {marketType && marketData.averages ? (
                 <div className="dashboard-diagnosis-list">
                   <div><span>현재 시장 유형</span><strong>{marketType.label}</strong></div>
-                  <div><span>창업 적합도</span><strong>{startupFit ? `${startupFit.score.toFixed(0)}점${startupFit.label ? ` · ${startupFit.label}` : ''}` : '분석 데이터 없음'}</strong></div>
                   <div><span>서울 평균 대비 개업률</span><strong className={marketType.openDifference >= 0 ? 'positive' : 'negative'}>{marketType.openDifference > 0 ? '+' : ''}{marketType.openDifference.toFixed(2)}%p</strong></div>
                   <div><span>서울 평균 대비 폐업률</span><strong className={marketType.closureDifference > 0 ? 'negative' : 'positive'}>{marketType.closureDifference > 0 ? '+' : ''}{marketType.closureDifference.toFixed(2)}%p</strong></div>
                 </div>
               ) : <p className="dashboard-empty">시장 진단 근거 데이터가 없습니다.</p>}
-              <p className="dashboard-diagnosis-note">시장 유형은 실제 개업률·폐업률과 서울 평균을 기준으로 판단하며, 창업 적합도는 해당 행정동·업종의 AI 분석 데이터가 있을 때 함께 표시합니다.</p>
+              <p className="dashboard-diagnosis-note">시장 유형은 실제 개업률·폐업률과 서울 평균을 기준으로 판단합니다.</p>
             </section>
           </div> : activeTab === 'map-analysis' ? <OpenSafeAnalysis
             selection={openSafeSelection}
