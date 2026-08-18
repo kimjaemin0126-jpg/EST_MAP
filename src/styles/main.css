@@ -743,6 +743,17 @@ button, select { font: inherit; }
 .dashboard-diagnosis-list span { color: #69756e; font-size: 13px; }
 .dashboard-diagnosis-list strong { color: #26332d; font-size: 15px; text-align: right; }
 .dashboard-diagnosis-note { margin: 12px 0 0; color: #7e8883; font-size: 12px; line-height: 1.5; }
+.startup-fit-breakdown { display: grid; gap: 12px; }
+.startup-fit-overall { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 9px; border-bottom: 1px solid #e8ecea; }
+.startup-fit-overall span { color: #5f6d66; font-size: 12px; font-weight: 700; }
+.startup-fit-overall strong { color: var(--green); font-size: 18px; font-variant-numeric: tabular-nums; }
+.startup-fit-components { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 16px; }
+.startup-fit-components > div { min-width: 0; }
+.startup-fit-components p { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0 0 5px; }
+.startup-fit-components p span { overflow: hidden; color: #69756e; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.startup-fit-components p strong { color: #34433b; font-size: 11px; font-variant-numeric: tabular-nums; }
+.startup-fit-components > div > div { height: 4px; overflow: hidden; border-radius: 999px; background: #e5ebe7; }
+.startup-fit-components i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #8fb7a3, var(--green)); }
 
 @media (max-width: 1500px) {
   .detail-workspace { padding: 18px 28px 22px; }

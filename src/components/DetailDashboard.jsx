@@ -19,6 +19,13 @@ import {
 import { formatNumber } from '../utils/formatters'
 
 const QUADRANT_ORDER = ['low-entry-high-closure', 'high-turnover', 'stable', 'active-entry']
+const STARTUP_FIT_COMPONENTS = [
+  { key: 'stability', label: '단기 안정성' },
+  { key: 'revenue_capacity', label: '매출 수용력' },
+  { key: 'competition_balance', label: '경쟁 균형' },
+  { key: 'market_momentum', label: '시장 활력' },
+  { key: 'demand_capacity', label: '수요 기반' },
+]
 
 function SummaryComparison({ stats, averages }) {
   if (!stats || !averages) return <p className="dashboard-empty">서울 평균 비교 데이터가 없습니다.</p>
@@ -120,9 +127,10 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
       })
       .then((data) => {
         if (!active) return
-        const score = Number(data?.startup_fit_score ?? data?.fs)
-        const label = data?.startup_fit_label ?? data?.fl ?? ''
-        if (Number.isFinite(score)) setStartupFit({ score, label })
+        const score = Number(data?.market?.startup_fit ?? data?.startup_fit_score ?? data?.fs)
+        const label = data?.market?.startup_fit_label ?? data?.startup_fit_label ?? data?.fl ?? ''
+        const components = data?.market?.startup_fit_components ?? data?.startup_fit_components ?? data?.fc ?? {}
+        if (Number.isFinite(score)) setStartupFit({ score, label, components })
       })
       .catch(() => {
         if (active) setStartupFit(null)
@@ -204,16 +212,28 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
             </section>
 
             <section className="dashboard-analysis-cell dashboard-basis-cell">
-              <div className="dashboard-cell-heading"><h3>시장 진단 근거</h3><span>실제 개폐업 지표</span></div>
-              {marketType && marketData.averages ? (
-                <div className="dashboard-diagnosis-list">
-                  <div><span>현재 시장 유형</span><strong>{marketType.label}</strong></div>
-                  <div><span>창업 적합도</span><strong>{startupFit ? `${startupFit.score.toFixed(0)}점${startupFit.label ? ` · ${startupFit.label}` : ''}` : '분석 데이터 없음'}</strong></div>
-                  <div><span>서울 평균 대비 개업률</span><strong className={marketType.openDifference >= 0 ? 'positive' : 'negative'}>{marketType.openDifference > 0 ? '+' : ''}{marketType.openDifference.toFixed(2)}%p</strong></div>
-                  <div><span>서울 평균 대비 폐업률</span><strong className={marketType.closureDifference > 0 ? 'negative' : 'positive'}>{marketType.closureDifference > 0 ? '+' : ''}{marketType.closureDifference.toFixed(2)}%p</strong></div>
+              <div className="dashboard-cell-heading"><h3>창업 적합도 구성</h3><span>AI 상대 점수</span></div>
+              {startupFit ? (
+                <div className="startup-fit-breakdown">
+                  <div className="startup-fit-overall">
+                    <span>종합 적합도</span>
+                    <strong>{startupFit.score.toFixed(0)}점{startupFit.label ? ` · ${startupFit.label}` : ''}</strong>
+                  </div>
+                  <div className="startup-fit-components">
+                    {STARTUP_FIT_COMPONENTS.map((component) => {
+                      const score = Number(startupFit.components?.[component.key])
+                      const safeScore = Number.isFinite(score) ? Math.max(0, Math.min(100, score)) : null
+                      return (
+                        <div key={component.key}>
+                          <p><span>{component.label}</span><strong>{safeScore == null ? '-' : `${safeScore.toFixed(0)}점`}</strong></p>
+                          <div><i style={{ width: `${safeScore ?? 0}%` }} /></div>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-              ) : <p className="dashboard-empty">시장 진단 근거 데이터가 없습니다.</p>}
-              <p className="dashboard-diagnosis-note">시장 유형은 실제 개업률·폐업률과 서울 평균을 기준으로 판단하며, 창업 적합도는 해당 행정동·업종의 AI 분석 데이터가 있을 때 함께 표시합니다.</p>
+              ) : <p className="dashboard-empty">단일 업종을 선택하면 창업 적합도 구성을 확인할 수 있습니다.</p>}
+              <p className="dashboard-diagnosis-note">단기 안정성·매출 수용력·경쟁 균형·시장 활력·수요 기반을 함께 비교한 행정동·업종 단위의 상대 점수입니다.</p>
             </section>
           </div> : <OpenSafeAnalysis
             selection={openSafeSelection}
