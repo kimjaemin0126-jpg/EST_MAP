@@ -1116,3 +1116,26 @@ button, select { font: inherit; }
 
 /* 선택 지역 텍스트는 JSX에서 제거됨 */
 .dashboard-quadrant-grid em { display: none !important; }
+
+
+/* ===== POST MORTEM logo visual alignment fix ===== */
+.map-brand-lockup {
+  flex-basis: 205px;
+  gap: 0;
+}
+.map-brand-logo-window {
+  width: 200px;
+  height: 33px;
+  overflow: hidden;
+}
+.map-brand-logo-window img {
+  width: 214px;
+  max-width: none;
+  transform: translate(-15px, -1px);
+}
+.map-brand-subtitle {
+  margin: 0;
+  padding: 0;
+  font-size: 10px;
+  line-height: 12px;
+}
