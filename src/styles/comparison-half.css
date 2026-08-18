@@ -1,0 +1,42 @@
+/* 비교 결과 카드: 항상 좌우 50:50 */
+.compare-results-half {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-auto-flow: column;
+  gap: 18px !important;
+  align-items: stretch !important;
+  width: 100%;
+}
+
+.compare-results-half > .compare-result-card {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 100%;
+  margin: 0 !important;
+}
+
+.compare-results-half .compare-ai-card,
+.compare-results-half .compare-radar-card {
+  grid-column: auto !important;
+  grid-row: 1 !important;
+}
+
+.compare-results-half .compare-radar-canvas {
+  min-height: 0 !important;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compare-results-half .compare-radar-canvas svg {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+}
+
+/* 요청대로 화면 폭과 관계없이 세로 전환하지 않음 */
+.compare-results-half {
+  overflow-x: visible;
+}
