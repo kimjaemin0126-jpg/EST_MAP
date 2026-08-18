@@ -1,0 +1,351 @@
+.compare-analysis { min-width: 0; display: grid; gap: 16px; color: #202824; }
+.compare-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.compare-heading span, .compare-result-heading span { color: var(--green, #176b4d); font-size: 11px; font-weight: 800; letter-spacing: .06em; }
+.compare-heading h2 { margin: 5px 0 0; font-size: 25px; line-height: 1.2; }
+.compare-heading p { margin: 6px 0 0; color: #748079; font-size: 13px; }
+.compare-controls { padding: 18px; border: 1px solid #dce5e0; border-radius: 11px; background: #f8faf9; }
+.compare-control-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.compare-control-heading strong { font-size: 14px; }
+.compare-control-heading span { color: #7d8983; font-size: 11px; }
+.compare-control-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.compare-control-grid label { min-width: 0; display: grid; gap: 7px; }
+.compare-control-grid label.wide { grid-column: 1 / -1; }
+.compare-control-grid label > span { color: #53605a; font-size: 11px; font-weight: 750; }
+.compare-control-grid input, .compare-control-grid select { width: 100%; height: 40px; padding: 0 12px; border: 1px solid #cdd8d2; border-radius: 6px; color: #202824; background: #fff; outline: none; }
+.compare-control-grid input:disabled { color: #607069; background: #edf2ef; }
+.compare-control-grid select:focus { border-color: var(--green, #176b4d); box-shadow: 0 0 0 3px rgba(23,107,77,.1); }
+.compare-preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+.compare-preview-grid > div { padding: 13px 14px; border: 1px solid #e0e7e3; border-radius: 8px; background: #fff; }
+.compare-preview-grid span, .compare-preview-grid small { display: block; color: #718079; font-size: 11px; }
+.compare-preview-grid strong { display: block; margin: 5px 0 4px; color: #174f3b; font-size: 20px; }
+.compare-run-button { display: block; min-width: 150px; height: 40px; margin: 14px 0 0 auto; padding: 0 18px; border: 0; border-radius: 6px; color: #fff; background: var(--green, #176b4d); font-size: 12px; font-weight: 800; cursor: pointer; }
+.compare-run-button:hover { background: #105b40; }
+.compare-run-button:disabled { cursor: not-allowed; opacity: .5; }
+.compare-empty, .compare-error, .compare-notice { padding: 18px; border-radius: 9px; font-size: 12px; line-height: 1.6; }
+.compare-empty { display: grid; gap: 3px; border: 1px dashed #d5ded9; color: #6c7872; background: #fafcfb; text-align: center; }
+.compare-empty strong { color: #334139; font-size: 13px; }
+.compare-error { color: #a3433e; border: 1px solid #efc8c5; background: #fff5f4; }
+.compare-notice { color: #76601e; border: 1px solid #eadca8; background: #fffaf0; }
+.compare-results { min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.compare-result-card { min-width: 0; overflow: hidden; border: 1px solid #dce5e0; border-radius: 11px; background: #fff; }
+.compare-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #e7ece9; background: #f8faf9; }
+.compare-result-heading h3 { margin: 3px 0 0; font-size: 15px; }
+.compare-legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.compare-legend span { display: inline-flex; align-items: center; gap: 5px; color: #617069; font-size: 10px; font-weight: 700; letter-spacing: 0; }
+.compare-legend i { width: 8px; height: 8px; border-radius: 50%; background: #b38618; }
+.compare-legend .right i { background: #237a5d; }
+.compare-radar-canvas { width: 100%; aspect-ratio: 560 / 340; padding: 8px 8px 0; }
+.compare-radar-canvas svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.compare-radar-grid { fill: none; stroke: #dce3df; stroke-width: 1; }
+.compare-radar-axis { stroke: #d1d9d5; stroke-width: 1; }
+.compare-radar-label { fill: #4f5d56; font-size: 11px; font-weight: 700; }
+.compare-radar-area { stroke-width: 2; stroke-linejoin: round; }
+.compare-radar-area.left { fill: rgba(179,134,24,.14); stroke: #b38618; }
+.compare-radar-area.right { fill: rgba(35,122,93,.14); stroke: #237a5d; }
+.compare-radar-dot { stroke: #fff; stroke-width: 1.5; }
+.compare-radar-dot.left { fill: #b38618; }.compare-radar-dot.right { fill: #237a5d; }
+.compare-value-table { border-top: 1px solid #e7ece9; }
+.compare-value-table > div { display: grid; grid-template-columns: minmax(100px, 1fr) repeat(2, minmax(80px, .9fr)); align-items: center; gap: 8px; min-height: 34px; padding: 8px 14px; border-bottom: 1px solid #edf0ee; }
+.compare-value-table > div:last-child { border-bottom: 0; }.compare-value-table .head { background: #f8faf9; }
+.compare-value-table span { color: #6d7973; font-size: 10px; }.compare-value-table strong { text-align: right; font-size: 11px; }
+.compare-value-table .head span:not(:first-child) { text-align: right; font-weight: 800; }
+.compare-ai-list { padding: 4px 16px; }.compare-ai-list > div { padding: 14px 0; border-bottom: 1px solid #e8ecea; }
+.compare-ai-list > div.featured { margin: 8px -7px; padding: 14px 9px; border: 1px solid #a8cdbd; border-radius: 8px; background: #eef8f3; }
+.compare-ai-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }.compare-ai-title strong { font-size: 12px; }
+.compare-ai-title em { padding: 3px 7px; border-radius: 4px; color: #176347; background: #e5f2eb; font-size: 9px; font-style: normal; font-weight: 800; }
+.compare-ai-row { display: grid; grid-template-columns: 70px minmax(0, 1fr) 45px; gap: 8px; align-items: center; margin-top: 7px; }.compare-ai-row span { overflow: hidden; color: #69766f; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.compare-ai-row > div { height: 7px; overflow: hidden; border-radius: 999px; background: #e6ebe8; }.compare-ai-row i { display: block; height: 100%; border-radius: inherit; background: #b38618; }.compare-ai-row.right i { background: #237a5d; }.compare-ai-row b { font-size: 10px; text-align: right; }
+.compare-market-position { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #e7ece9; background: #f8faf9; }.compare-market-position > div { min-width: 0; padding: 13px 14px; }.compare-market-position > div + div { border-left: 1px solid #e1e7e4; }.compare-market-position span, .compare-market-position small { display: block; color: #738079; font-size: 9px; }.compare-market-position strong { display: block; margin: 4px 0; color: #174f3b; font-size: 13px; }
+@media (max-width: 1100px) { .compare-results, .compare-control-grid, .compare-preview-grid { grid-template-columns: 1fr; }.compare-control-grid label.wide { grid-column: auto; } }
+
+
+/* Comparison UI review */
+.compare-field-note { margin-top: -2px; color: #8a948f; font-size: 10px; line-height: 1.45; }
+.compare-preview-grid > div { position: relative; }
+.compare-preview-grid strong { font-size: 24px; }
+.compare-preview-grid em { position: absolute; top: 14px; right: 14px; color: #66736c; font-size: 10px; font-style: normal; font-weight: 700; }
+.compare-run-button { width: 100%; height: 44px; margin-top: 14px; font-size: 13px; }
+.compare-results { grid-template-columns: 1fr; gap: 16px; }
+.compare-result-card { width: 100%; }
+.compare-radar-canvas { aspect-ratio: 900 / 420; min-height: 330px; padding: 10px 18px 0; }
+.compare-radar-label { font-size: 12px; }
+.compare-value-table > div { grid-template-columns: minmax(140px, 1fr) repeat(2, minmax(110px, .9fr)); min-height: 39px; padding: 9px 18px; }
+.compare-value-table span { font-size: 11px; }
+.compare-value-table strong { font-size: 12px; }
+.compare-notice { padding: 12px 14px; font-size: 11px; }
+
+
+/* 지역 비교 탭: 왼쪽 지역 요약을 실제 스크롤 컨테이너에 고정 */
+.comparison-workspace .detail-workspace-layout {
+  align-items: start;
+}
+
+.comparison-workspace .dashboard-summary {
+  position: sticky;
+  top: 0;
+  align-self: start;
+
+  /* main.css의 height:100% / overflow:hidden이 sticky 이동 범위를 막으므로 해제 */
+  height: auto;
+  min-height: 0;
+  max-height: calc(100vh - 126px);
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  z-index: 5;
+  scrollbar-width: thin;
+  overscroll-behavior: contain;
+}
+
+.comparison-workspace .dashboard-summary::-webkit-scrollbar {
+  width: 5px;
+}
+
+.comparison-workspace .dashboard-summary::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(83, 101, 92, .25);
+}
+
+@media (max-width: 1100px) {
+  .comparison-workspace .dashboard-summary {
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+
+/* 지역 비교 탭: 왼쪽 요약 패널을 '공중에 떠 있는 카드'처럼 보이게 */
+.comparison-workspace .dashboard-summary {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+
+  height: auto;
+  min-height: 0;
+  max-height: calc(100vh - 36px);
+
+  padding: 20px 18px 18px;
+  border: 1px solid rgba(23, 107, 77, .10);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow:
+    0 16px 36px rgba(24, 42, 33, .12),
+    0 3px 10px rgba(24, 42, 33, .06);
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 20;
+
+  transform: translateY(0);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.comparison-workspace .dashboard-summary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85);
+}
+
+.comparison-workspace .dashboard-summary .dashboard-breadcrumb {
+  margin-top: 0;
+}
+
+.comparison-workspace .dashboard-summary::-webkit-scrollbar {
+  width: 6px;
+}
+
+.comparison-workspace .dashboard-summary::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comparison-workspace .dashboard-summary::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(66, 91, 79, .24);
+}
+
+@media (max-width: 1100px) {
+  .comparison-workspace .dashboard-summary {
+    position: static;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+
+/* 지역 비교: 왼쪽 요약 패널 제거 + 본문 가독성 강화 */
+.comparison-workspace .comparison-summary-hidden {
+  display: none !important;
+}
+
+.comparison-workspace .detail-workspace-layout {
+  grid-template-columns: minmax(0, 1fr) !important;
+  max-width: 1440px;
+  gap: 0;
+}
+
+.comparison-workspace .dashboard-detail-container {
+  width: 100%;
+  max-width: none;
+  min-height: calc(100vh - 132px);
+  padding: 30px 34px 36px;
+  border-radius: 18px;
+  overflow: visible;
+}
+
+.comparison-workspace .dashboard-detail-heading {
+  padding-bottom: 22px;
+}
+
+.comparison-workspace .dashboard-detail-heading h2 {
+  font-size: 31px;
+  line-height: 1.15;
+}
+
+.comparison-workspace .dashboard-detail-heading p {
+  max-width: 820px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.comparison-workspace .dashboard-tabs {
+  margin-bottom: 22px;
+}
+
+.comparison-workspace .dashboard-tab-panel {
+  width: 100%;
+}
+
+/* 비교 입력 영역 */
+.comparison-workspace .compare-analysis {
+  width: 100%;
+  max-width: none;
+}
+
+.comparison-workspace .compare-controls,
+.comparison-workspace .comparison-controls,
+.comparison-workspace .comparison-filter-card {
+  padding: 22px 24px;
+  border-radius: 14px;
+}
+
+.comparison-workspace .compare-control-grid,
+.comparison-workspace .comparison-control-grid {
+  gap: 16px 20px;
+}
+
+.comparison-workspace select,
+.comparison-workspace .compare-analysis select {
+  min-height: 44px;
+  font-size: 14px;
+}
+
+.comparison-workspace .compare-submit,
+.comparison-workspace .comparison-submit,
+.comparison-workspace .compare-button {
+  min-height: 46px;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+/* 결과 카드 가독성 */
+.comparison-workspace .compare-result-card,
+.comparison-workspace .comparison-card,
+.comparison-workspace .comparison-chart-card,
+.comparison-workspace .comparison-metrics-card {
+  border-radius: 14px;
+}
+
+.comparison-workspace .comparison-results,
+.comparison-workspace .compare-results {
+  gap: 20px;
+}
+
+.comparison-workspace .comparison-chart-card,
+.comparison-workspace .compare-chart-card {
+  padding: 24px 26px;
+}
+
+.comparison-workspace .comparison-chart-card h3,
+.comparison-workspace .compare-chart-card h3,
+.comparison-workspace .comparison-section-title {
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.comparison-workspace .comparison-radar,
+.comparison-workspace .compare-radar,
+.comparison-workspace svg {
+  max-width: 100%;
+}
+
+/* 표를 넓고 읽기 쉽게 */
+.comparison-workspace table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+}
+
+.comparison-workspace th {
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 750;
+  text-align: left;
+}
+
+.comparison-workspace td {
+  padding: 13px 14px;
+  line-height: 1.45;
+}
+
+.comparison-workspace tbody tr + tr td {
+  border-top: 1px solid #edf1ef;
+}
+
+/* 경고/안내는 짧고 눈에 덜 거슬리게 */
+.comparison-workspace .compare-warning,
+.comparison-workspace .comparison-warning,
+.comparison-workspace .opensafe-error {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* 기존 floating sidebar 규칙 무력화 */
+.comparison-workspace .dashboard-summary {
+  position: static !important;
+  max-height: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 900px) {
+  .comparison-workspace .dashboard-detail-container {
+    padding: 22px 18px 28px;
+    border-radius: 12px;
+  }
+
+  .comparison-workspace .dashboard-detail-heading h2 {
+    font-size: 26px;
+  }
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import ClosureTrendChart from './ClosureTrendChart'
 import MarketQuadrant from './MarketQuadrant'
 import OpenSafeAnalysis from './OpenSafeAnalysis'
+import ComparisonAnalysis from './ComparisonAnalysis'
 import { getIndustryCode } from '../services/dataService'
 import {
   MARKET_TYPE_DESCRIPTIONS,
@@ -90,17 +91,17 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
 
   const analysisIndustry = industryOptions.find((option) => option.code === analysisIndustryCode) || null
   const openSafeSelection = info?.name && analysisIndustry ? {
-    dongCode: String(dongCode),
-    industryCode: String(analysisIndustry.code),
+    dongCode,
+    industryCode: analysisIndustry.code,
     dongName: info.name,
     industryName: analysisIndustry.name,
     quarterLabel,
   } : null
 
   return (
-    <main className="detail-workspace">
+    <main className={`detail-workspace ${activeTab === 'comparison' ? 'comparison-workspace' : ''}`}>
       <div className="detail-workspace-layout">
-        <aside className="dashboard-summary">
+        <aside className={`dashboard-summary ${activeTab === 'comparison' ? 'comparison-summary-hidden' : ''}`}>
           <button type="button" className="dashboard-breadcrumb" onClick={onReturnToMap}>← 상권 지도 <span>/ {info?.name} 상세 분석</span></button>
           <div className="dashboard-region-heading">
             <span>지역 분석 / {getDongDisplayIndex(processed, dongCode)}</span>
@@ -135,10 +136,19 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
         </aside>
 
         <section className="dashboard-detail-container">
-          <div className="dashboard-detail-heading"><span>상세 분석</span><h2>{activeTab === 'market' ? '시장 진단' : '지도 분석'}</h2><p>{activeTab === 'market' ? '상권 위치, 시장 유형과 최근 개폐업 흐름을 함께 읽습니다.' : '선택한 행정동과 업종의 12개월 운영 시나리오 및 근거 기반 창업 코치를 확인합니다.'}</p></div>
+          <div className="dashboard-detail-heading">
+            <span>상세 분석</span>
+            <h2>{activeTab === 'market' ? '시장 진단' : activeTab === 'map-analysis' ? '지도 분석' : '지역 비교'}</h2>
+            <p>{activeTab === 'market'
+              ? '상권 위치, 시장 유형과 최근 개폐업 흐름을 함께 읽습니다.'
+              : activeTab === 'map-analysis'
+                ? '선택한 행정동과 업종의 12개월 운영 시나리오 및 근거 기반 창업 코치를 확인합니다.'
+                : '현재 지역과 다른 행정동을 같은 업종 기준으로 나란히 비교합니다.'}</p>
+          </div>
           <div className="dashboard-tabs" role="tablist" aria-label="상세 분석 탭">
             <button type="button" role="tab" aria-selected={activeTab === 'market'} className={activeTab === 'market' ? 'active' : ''} onClick={() => setActiveTab('market')}>시장 진단</button>
             <button type="button" role="tab" aria-selected={activeTab === 'map-analysis'} className={activeTab === 'map-analysis' ? 'active' : ''} onClick={() => setActiveTab('map-analysis')}>지도 분석</button>
+            <button type="button" role="tab" aria-selected={activeTab === 'comparison'} className={activeTab === 'comparison' ? 'active' : ''} onClick={() => setActiveTab('comparison')}>지역 비교</button>
           </div>
 
           <div className="dashboard-tab-panel" role="tabpanel">
@@ -174,11 +184,15 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
               ) : <p className="dashboard-empty">시장 진단 근거 데이터가 없습니다.</p>}
               <p className="dashboard-diagnosis-note">임의 점수 없이 현재 분기의 실제 개업률·폐업률과 서울 평균만 사용합니다.</p>
             </section>
-          </div> : <OpenSafeAnalysis
+          </div> : activeTab === 'map-analysis' ? <OpenSafeAnalysis
             selection={openSafeSelection}
             industryOptions={industryOptions}
             selectedIndustryCode={analysisIndustryCode}
             onIndustryChange={setAnalysisIndustryCode}
+          /> : <ComparisonAnalysis
+            baseDongCode={dongCode}
+            processed={processed}
+            initialIndustry={industry}
           />}
           </div>
         </section>
