@@ -3,6 +3,7 @@ import Header from './components/Header'
 import SeoulMap from './components/SeoulMap'
 import DongDetailPanel from './components/DongDetailPanel'
 import DetailDashboard from './components/DetailDashboard'
+import ScenarioCoachSection from './components/ScenarioCoachSection'
 import { DATA_PATHS } from './config/dataPaths'
 import {
   fetchJsonCached,
@@ -114,14 +115,24 @@ export default function App() {
   const handleOpenDetail = useCallback(() => {
     if (selectedDongCode) setViewMode('detail')
   }, [selectedDongCode])
+  const handleOpenMapAnalysis = useCallback(() => {
+    if (selectedDongCode) setViewMode('analysis')
+  }, [selectedDongCode])
+  const handleReturnToDetail = useCallback(() => {
+    if (selectedDongCode) setViewMode('detail')
+  }, [selectedDongCode])
   const handleReturnToMap = useCallback(() => setViewMode('map'), [])
 
   const detailViewActive = viewMode === 'detail' && Boolean(selectedDongCode)
+  const analysisViewActive = viewMode === 'analysis' && Boolean(selectedDongCode)
+  const workspaceViewActive = detailViewActive || analysisViewActive
 
   return (
     <div className="app-root">
       <Header
-        detailMode={detailViewActive}
+        detailMode={workspaceViewActive}
+        mapAnalysisActive={analysisViewActive}
+        onOpenMapAnalysis={handleOpenMapAnalysis}
         onReturnToMap={handleReturnToMap}
         selectedQuarter={selectedQuarter}
         onQuarterChange={setSelectedQuarter}
@@ -133,6 +144,16 @@ export default function App() {
       />
       {!initialLoadFinished ? (
         <div className="app-loading"><span className="loading-spinner" />상권 데이터를 불러오는 중입니다...</div>
+      ) : analysisViewActive ? (
+        <ScenarioCoachSection
+          dongCode={selectedDongCode}
+          quarter={selectedQuarter}
+          industry={selectedIndustry}
+          industries={industries}
+          onIndustryChange={setSelectedIndustry}
+          processed={processed}
+          onReturnToDetail={handleReturnToDetail}
+        />
       ) : detailViewActive ? (
         <DetailDashboard
           dongCode={selectedDongCode}

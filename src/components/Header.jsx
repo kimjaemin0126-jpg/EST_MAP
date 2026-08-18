@@ -1,7 +1,13 @@
 import FilterBar from './FilterBar'
 
 export default function Header(props) {
-  const { detailMode, onReturnToMap, ...filterProps } = props
+  const {
+    detailMode,
+    mapAnalysisActive,
+    onOpenMapAnalysis,
+    onReturnToMap,
+    ...filterProps
+  } = props
   return (
     <header className={`app-header ${detailMode ? 'detail-header' : ''}`}>
       <div className="brand-block">
@@ -10,7 +16,12 @@ export default function Header(props) {
       </div>
       {detailMode ? (
         <div className="detail-header-actions">
-          <span>지도 분석</span>
+          <button
+            type="button"
+            className={`detail-analysis-nav ${mapAnalysisActive ? 'active' : ''}`}
+            aria-pressed={mapAnalysisActive}
+            onClick={onOpenMapAnalysis}
+          >지도 분석</button>
           <button type="button" onClick={onReturnToMap}>상권 지도 보기</button>
         </div>
       ) : <FilterBar {...filterProps} />}

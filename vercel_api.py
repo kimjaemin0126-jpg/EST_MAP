@@ -34,3 +34,4 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def method_not_allowed(self) -> None:
         self.json_response({"error": "POST 요청만 지원합니다."}, HTTPStatus.METHOD_NOT_ALLOWED)
+

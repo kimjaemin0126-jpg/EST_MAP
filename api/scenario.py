@@ -1,4 +1,10 @@
-"""Vercel Function: POST /api/scenario."""
+"""Vercel Function: POST /api/scenario.
+
+This handler is a small Vercel-compatible wrapper that calls the
+`scenario_payload` function from the application core and returns the
+result as JSON. It intentionally mirrors the deployment entrypoint used
+in the open-safe-ai-main project.
+"""
 
 from __future__ import annotations
 
@@ -28,3 +34,4 @@ class handler(ApiHandler):  # Vercel discovers this class by name.
 
     def do_GET(self) -> None:  # noqa: N802
         self.method_not_allowed()
+
