@@ -1,4 +1,4 @@
-/* 상권 지표 비교: 레이더와 실제 수치 표를 좌우 50:50으로 배치 */
+/* 상권 지표 비교: 레이더 / 지표표 50:50 */
 .compare-radar-card .compare-radar-split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -40,9 +40,7 @@
   border-bottom: 1px solid #edf1ef;
 }
 
-.compare-radar-card .compare-value-table > div:last-child {
-  border-bottom: 0;
-}
+.compare-radar-card .compare-value-table > div:last-child { border-bottom: 0; }
 
 .compare-radar-card .compare-value-table .head {
   min-height: 48px;
@@ -54,9 +52,7 @@
 
 .compare-radar-card .compare-value-table > div > span:nth-child(2),
 .compare-radar-card .compare-value-table > div > span:nth-child(3),
-.compare-radar-card .compare-value-table strong {
-  text-align: right;
-}
+.compare-radar-card .compare-value-table strong { text-align: right; }
 
 .compare-radar-card .compare-value-table > div:not(.head) > span {
   color: #66766f;
