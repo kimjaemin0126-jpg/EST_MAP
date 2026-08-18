@@ -57,6 +57,24 @@ export function MarketRadarComparison({ leftName, rightName, metrics }) {
   )
 }
 
+
+export function ComparisonValueTable({ leftName, rightName, metrics }) {
+  return (
+    <article className="compare-result-card compare-value-card">
+      <div className="compare-value-table">
+        <div className="head"><span>지표</span><span>{leftName}</span><span>{rightName}</span></div>
+        {metrics.map((metric) => (
+          <div key={metric.key}>
+            <span>{metric.label}</span>
+            <strong>{metric.leftDisplay}</strong>
+            <strong>{metric.rightDisplay}</strong>
+          </div>
+        ))}
+      </div>
+    </article>
+  )
+}
+
 function locationFitScore(ai) {
   const components = ai?.market?.startup_fit_components || {}
   const weighted = [[components.revenue_capacity, .25], [components.competition_balance, .20], [components.market_momentum, .15], [components.demand_capacity, .10]]

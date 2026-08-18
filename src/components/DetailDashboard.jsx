@@ -1,10 +1,13 @@
+import '../styles/startup-fit-heading.css'
 import { useEffect, useState } from 'react'
 import ClosureTrendChart from './ClosureTrendChart'
 import MarketQuadrant from './MarketQuadrant'
 import OpenSafeAnalysis from './OpenSafeAnalysis'
 import ComparisonAnalysis from './ComparisonAnalysis'
 import { getIndustryCode } from '../services/dataService'
+import { getOpenSafeStartupFit } from '../services/openSafeStartupFit'
 import {
+  ALL_INDUSTRIES,
   MARKET_TYPE_DESCRIPTIONS,
   MIN_STORE_COUNT,
   MODE_STYLES,
@@ -45,7 +48,7 @@ function SummaryComparison({ stats, averages }) {
   )
 }
 
-function MarketTypeGrid({ marketType, distribution }) {
+function MarketTypeGrid({ marketType }) {
   const levels = MODE_STYLES[ANALYSIS_MODES.MARKET_TYPE].levels
   return (
     <div className="dashboard-quadrant-grid">
@@ -54,11 +57,35 @@ function MarketTypeGrid({ marketType, distribution }) {
         return (
           <div className={marketType?.key === key ? 'active' : ''} key={key}>
             <span>{type?.label}</span>
-            <strong>{distribution?.[key] || 0}<small>개 지역</small></strong>
             {marketType?.key === key && <em>선택 지역</em>}
           </div>
         )
       })}
+    </div>
+  )
+}
+
+
+function StartupFitComposition({ startupFit }) {
+  if (!startupFit) return <p className="dashboard-empty">OpenSafe AI 창업 적합도 데이터가 없습니다.</p>
+
+  const components = [
+    ['단기 안정성', startupFit.components?.stability],
+    ['수익 여력', startupFit.components?.revenueCapacity],
+    ['시장·경쟁 균형', startupFit.components?.marketCompetitionBalance],
+    ['수요 여력', startupFit.components?.demandCapacity],
+  ]
+
+  return (
+    <div className="startup-fit-composition">
+      {components.map(([label, value]) => (
+        <div className="startup-fit-factor" key={label}>
+          <span>{label}</span>
+          <div className="startup-fit-track"><i style={{ width: `${Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0}%` }} /></div>
+          <strong>{Number.isFinite(value) ? Math.round(value) : '-'}</strong>
+        </div>
+      ))}
+      <p>같은 업종 내 상대 점수로, 단일 지표만으로 판단하지 않습니다.</p>
     </div>
   )
 }
@@ -103,34 +130,21 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
     let active = true
     setStartupFit(null)
 
-    if (!openSafeSelection) return () => { active = false }
+    const currentIndustryCode = industry === ALL_INDUSTRIES
+      ? ''
+      : (getIndustryCode(processed, quarterCode, dongCode, industry) || '')
 
-    fetch('/api/scenario', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        dong_code: String(openSafeSelection.dongCode),
-        industry_code: String(openSafeSelection.industryCode),
-        dong_name: openSafeSelection.dongName,
-        industry_name: openSafeSelection.industryName,
-      }),
-    })
-      .then(async (response) => {
-        if (!response.ok) throw new Error('startup-fit unavailable')
-        return response.json()
-      })
-      .then((data) => {
-        if (!active) return
-        const score = Number(data?.startup_fit_score ?? data?.fs)
-        const label = data?.startup_fit_label ?? data?.fl ?? ''
-        if (Number.isFinite(score)) setStartupFit({ score, label })
+    getOpenSafeStartupFit(dongCode, currentIndustryCode)
+      .then((result) => {
+        if (active) setStartupFit(result)
       })
       .catch(() => {
         if (active) setStartupFit(null)
       })
 
     return () => { active = false }
-  }, [dongCode, analysisIndustryCode])
+  }, [dongCode, quarterCode, industry, processed])
+
 
   return (
     <main className={`detail-workspace ${activeTab === 'comparison' ? 'comparison-workspace' : ''}`}>
@@ -194,7 +208,7 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
 
             <section className="dashboard-analysis-cell dashboard-type-cell">
               <div className="dashboard-cell-heading"><h3>안정성 × 시장 진입 4분면</h3><span>서울 평균 기준</span></div>
-              <MarketTypeGrid marketType={marketType} distribution={marketData.distribution} />
+              <MarketTypeGrid marketType={marketType} />
               <p className="dashboard-type-note">{marketDescription || '시장 유형을 판단할 데이터가 없습니다.'}</p>
             </section>
 
@@ -208,15 +222,11 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
             </section>
 
             <section className="dashboard-analysis-cell dashboard-basis-cell">
-              <div className="dashboard-cell-heading"><h3>창업 적합도</h3><span>시장 진단 지표</span></div>
-              {marketType && marketData.averages ? (
-                <div className="dashboard-diagnosis-list">
-                  <div><span>현재 시장 유형</span><strong>{marketType.label}</strong></div>
-                  <div><span>서울 평균 대비 개업률</span><strong className={marketType.openDifference >= 0 ? 'positive' : 'negative'}>{marketType.openDifference > 0 ? '+' : ''}{marketType.openDifference.toFixed(2)}%p</strong></div>
-                  <div><span>서울 평균 대비 폐업률</span><strong className={marketType.closureDifference > 0 ? 'negative' : 'positive'}>{marketType.closureDifference > 0 ? '+' : ''}{marketType.closureDifference.toFixed(2)}%p</strong></div>
-                </div>
-              ) : <p className="dashboard-empty">시장 진단 근거 데이터가 없습니다.</p>}
-              <p className="dashboard-diagnosis-note">시장 유형은 실제 개업률·폐업률과 서울 평균을 기준으로 판단합니다.</p>
+              <div className="dashboard-cell-heading startup-fit-card-heading">
+                <h3>창업 적합도 구성</h3>
+                <span>{startupFit ? `${startupFit.score} / 100 · ${startupFit.label}` : 'OpenSafe AI'}</span>
+              </div>
+              <StartupFitComposition startupFit={startupFit} />
             </section>
           </div> : activeTab === 'map-analysis' ? <OpenSafeAnalysis
             selection={openSafeSelection}

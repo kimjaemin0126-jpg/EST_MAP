@@ -869,3 +869,66 @@ button, select { font: inherit; }
 @media (max-width: 900px) {
   .opensafe-industry-picker { grid-template-columns: 1fr; align-items: stretch; }
 }
+
+
+/* Final market diagnosis adjustments */
+.dashboard-quadrant-grid > div {
+  gap: 5px;
+}
+.dashboard-quadrant-grid > div > strong,
+.dashboard-quadrant-grid > div > small {
+  display: none !important;
+}
+
+.startup-fit-card-heading {
+  align-items: center;
+}
+.startup-fit-card-heading h3 {
+  font-size: 18px;
+}
+.startup-fit-card-heading > span {
+  color: #7f8984;
+  font-size: 12px;
+  font-weight: 650;
+}
+.startup-fit-composition {
+  display: grid;
+  gap: 0;
+}
+.startup-fit-factor {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 14px;
+  min-height: 48px;
+  border-bottom: 1px solid #edf0ee;
+}
+.startup-fit-factor > span {
+  color: #66736c;
+  font-size: 13px;
+  font-weight: 650;
+}
+.startup-fit-factor > strong {
+  color: #202a25;
+  font-size: 17px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.startup-fit-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7ece9;
+}
+.startup-fit-track > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #176b4d;
+}
+.startup-fit-composition > p {
+  margin: 13px 0 0;
+  color: #7a8580;
+  font-size: 11px;
+  line-height: 1.5;
+}

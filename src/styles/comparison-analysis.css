@@ -349,3 +349,31 @@
     font-size: 26px;
   }
 }
+
+
+/* Final comparison result layout */
+.compare-result-stack {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.compare-value-card {
+  width: 100%;
+}
+.compare-value-card .compare-value-table {
+  border-top: 0;
+}
+.compare-value-card .compare-value-table > div {
+  grid-template-columns: minmax(160px, 1fr) repeat(2, minmax(130px, .9fr));
+  min-height: 46px;
+  padding: 11px 18px;
+}
+.compare-value-card .compare-value-table .head {
+  min-height: 42px;
+}
+.compare-value-card .compare-value-table span {
+  font-size: 12px;
+}
+.compare-value-card .compare-value-table strong {
+  font-size: 13px;
+}
