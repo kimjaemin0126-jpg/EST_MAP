@@ -135,7 +135,7 @@ function CoachResult({ coach }) {
   )
 }
 
-export default function OpenSafeAnalysis({ selection }) {
+export default function OpenSafeAnalysis({ selection, industryOptions = [], selectedIndustryCode = '', onIndustryChange }) {
   const [inputs, setInputs] = useState(DEFAULT_OPENSAFE_INPUTS)
   const [scenario, setScenario] = useState(null)
   const [coach, setCoach] = useState(null)
@@ -146,7 +146,7 @@ export default function OpenSafeAnalysis({ selection }) {
     if (!selection) {
       setScenario(null)
       setCoach(null)
-      setError('지도에서 행정동을 선택하고, 상단에서 전체 업종이 아닌 업종을 선택해주세요.')
+      setError('지도 분석에서 분석할 업종을 하나 선택해주세요.')
       return
     }
 
@@ -154,13 +154,27 @@ export default function OpenSafeAnalysis({ selection }) {
       setLoading(true)
       setError(null)
       const payload = buildOpenSafePayload(selection, nextInputs)
-      const [nextScenario, nextCoach] = await Promise.all([
-        fetchOpenSafeScenario(payload, signal),
-        fetchOpenSafeCoach(payload, signal),
-      ])
+      const nextScenario = await fetchOpenSafeScenario(payload, signal)
       if (signal?.aborted) return
       setScenario(nextScenario)
-      setCoach(nextCoach)
+
+      try {
+        const nextCoach = await fetchOpenSafeCoach(payload, signal)
+        if (signal?.aborted) return
+        setCoach(nextCoach)
+      } catch (coachError) {
+        if (coachError.name !== 'AbortError') {
+          setCoach({
+            summary: '운영 시나리오는 정상 계산되었습니다.',
+            decision: 'AI 코치 응답만 불러오지 못했습니다.',
+            evidence: [],
+            priorities: [],
+            field_checks: [],
+            caution: coachError.message || '코치 API 요청에 실패했습니다.',
+            notice: '시나리오 결과는 그대로 확인할 수 있습니다.',
+          })
+        }
+      }
     } catch (requestError) {
       if (requestError.name !== 'AbortError') {
         setScenario(null)
@@ -175,8 +189,16 @@ export default function OpenSafeAnalysis({ selection }) {
   // 행정동·업종 코드가 바뀔 때만 기본 가정으로 자동 분석한다.
   const selectionKey = selection ? `${selection.dongCode}:${selection.industryCode}` : 'empty'
   useEffect(() => {
+    if (!selection) {
+      setScenario(null)
+      setCoach(null)
+      setError(null)
+      setLoading(false)
+      return undefined
+    }
+
     const controller = new AbortController()
-    loadAnalysis(inputs, controller.signal)
+    loadAnalysis(DEFAULT_OPENSAFE_INPUTS, controller.signal)
     return () => controller.abort()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectionKey])
@@ -194,8 +216,25 @@ export default function OpenSafeAnalysis({ selection }) {
   return (
     <div className="opensafe-analysis">
       <div className="opensafe-heading">
-        <div><span>AI 창업 분석</span><h2>12개월 운영 시나리오</h2><p>{selection ? `${selection.dongName} · ${selection.industryName} · ${selection.quarterLabel}` : '분석할 행정동과 업종을 먼저 선택해주세요.'}</p></div>
+        <div><span>AI 창업 분석</span><h2>12개월 운영 시나리오</h2><p>{selection ? `${selection.dongName} · ${selection.industryName} · ${selection.quarterLabel}` : '분석할 업종을 아래에서 선택해주세요.'}</p></div>
       </div>
+
+      <section className="opensafe-industry-picker" aria-label="지도 분석 업종 선택">
+        <label htmlFor="opensafe-industry-select">
+          <span>분석 업종</span>
+          <strong>전체 업종이 아닌 하나의 업종을 선택하세요.</strong>
+        </label>
+        <select
+          id="opensafe-industry-select"
+          value={selectedIndustryCode}
+          onChange={(event) => onIndustryChange?.(event.target.value)}
+        >
+          <option value="">업종을 선택해주세요</option>
+          {industryOptions.map((option) => (
+            <option key={option.code} value={option.code}>{option.name}</option>
+          ))}
+        </select>
+      </section>
 
       <form className="opensafe-inputs" onSubmit={handleSubmit}>
         <div className="opensafe-inputs-heading"><strong>운영 가정</strong><span>금액은 만 원 단위이며, 다시 계산하면 두 AI 결과에 함께 반영됩니다.</span></div>

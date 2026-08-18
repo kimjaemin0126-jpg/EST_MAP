@@ -4,12 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "npm run preprocess:closures",
-    "dev": "vite",
-    "dev:with-api": "EST_MAP_API_PROXY=http://127.0.0.1:8765 vite",
-    "dev:with-api:win": "set EST_MAP_API_PROXY=http://127.0.0.1:8765 && vite",
-    "predev:full": "npm run preprocess:closures",
-    "dev:full": "node scripts/dev-full.cjs",
-    "api:dev": "python app.py --port 8765",
+    "dev": "node scripts/dev-with-api.js",
     "prebuild": "npm run preprocess:closures",
     "build": "vite build",
     "preview": "vite preview",

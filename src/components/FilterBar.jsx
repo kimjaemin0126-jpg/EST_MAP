@@ -33,8 +33,8 @@ export default function FilterBar({
         </select>
       </label>
       <div className="analysis-mode-field">
-        <span className="sr-only">분석 기준</span>
-        <div className="segmented-control" role="tablist" aria-label="지도 분석 기준">
+        <span className="sr-only">표시 기준</span>
+        <div className="segmented-control" role="tablist" aria-label="지도 표시 기준">
           {ANALYSIS_MODE_OPTIONS.map((mode) => (
             <button
               key={mode.value}
