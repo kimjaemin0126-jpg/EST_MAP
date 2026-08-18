@@ -5,6 +5,8 @@
   "scripts": {
     "predev": "npm run preprocess:closures",
     "dev": "vite",
+    "predev:full": "npm run preprocess:closures",
+    "dev:full": "node scripts/dev-full.cjs",
     "prebuild": "npm run preprocess:closures",
     "build": "vite build",
     "preview": "vite preview",

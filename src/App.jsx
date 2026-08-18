@@ -22,6 +22,7 @@ function initialDongCode() {
 }
 
 export default function App() {
+  const initialDetailTab = window.location.pathname === '/scenario' ? 'map-analysis' : 'market'
   const [selectedQuarter, setSelectedQuarter] = useState('20251')
   const [selectedIndustry, setSelectedIndustry] = useState(ALL_INDUSTRIES)
   const [analysisMode, setAnalysisMode] = useState(ANALYSIS_MODES.CLOSURE_RATE)
@@ -154,6 +155,7 @@ export default function App() {
           industry={selectedIndustry}
           processed={processed}
           onReturnToMap={handleReturnToMap}
+          initialTab={initialDetailTab}
         />
       ) : (
         <main className="app-main">

@@ -15,6 +15,14 @@ npm run dev
 
 저장소에는 브라우저에서 사용하는 전처리 결과가 포함되어 있어 원본 CSV가 없어도 실행됩니다.
 
+AI 창업 분석까지 함께 확인하려면 Vite와 Python API를 동시에 실행합니다.
+
+```bash
+npm run dev:full
+```
+
+`/scenario`에서 지역을 선택해 상세 화면으로 들어가면 `AI 창업 분석` 탭이 기본으로 열립니다. 로컬 API는 `POST /api/scenario`, `POST /api/coach`를 제공합니다.
+
 ## 인허가 폐업 데이터 교체
 
 1. 준비된 파일을 아래 이름으로 `DP/data/`에 넣거나 덮어씁니다.

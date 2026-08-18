@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import ClosureTrendChart from './ClosureTrendChart'
 import MarketQuadrant from './MarketQuadrant'
+import OpenSafeAnalysis from './OpenSafeAnalysis'
+import { getIndustryCode } from '../services/dataService'
 import {
   MARKET_TYPE_DESCRIPTIONS,
   MIN_STORE_COUNT,
@@ -59,7 +62,8 @@ function MarketTypeGrid({ marketType, distribution }) {
   )
 }
 
-export default function DetailDashboard({ dongCode, quarter, industry, processed, onReturnToMap }) {
+export default function DetailDashboard({ dongCode, quarter, industry, processed, onReturnToMap, initialTab = 'market' }) {
+  const [activeTab, setActiveTab] = useState(initialTab)
   const quarterCode = quarterLabelToCode(quarter)
   const info = processed?.[dongCode]
   const stats = getDongStats(info, quarterCode, industry)
@@ -73,6 +77,59 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
   const sampleInsufficient = Number.isFinite(stats?.['점포_수']) && stats['점포_수'] < MIN_STORE_COUNT
   const quarterLabel = `${quarterCode.slice(0, 4)}년 ${quarterCode.slice(4)}분기`
   const marketDescription = marketType ? MARKET_TYPE_DESCRIPTIONS[marketType.key] : null
+  const industryOptions = Object.entries(info?.industries?.[quarterCode] || {})
+    .map(([name, row]) => ({ name, code: row?.code ? String(row.code) : '' }))
+    .filter((option) => option.code)
+    .sort((a, b) => a.name.localeCompare(b.name, 'ko'))
+  const defaultAnalysisIndustryCode = getIndustryCode(processed, quarterCode, dongCode, industry) || ''
+  const [analysisIndustryCode, setAnalysisIndustryCode] = useState(defaultAnalysisIndustryCode)
+  const [startupFit, setStartupFit] = useState(null)
+
+  useEffect(() => {
+    setAnalysisIndustryCode(defaultAnalysisIndustryCode)
+  }, [dongCode, quarterCode, defaultAnalysisIndustryCode])
+
+  const analysisIndustry = industryOptions.find((option) => option.code === analysisIndustryCode) || null
+  const openSafeSelection = info?.name && analysisIndustry ? {
+    dongCode,
+    industryCode: analysisIndustry.code,
+    dongName: info.name,
+    industryName: analysisIndustry.name,
+    quarterLabel,
+  } : null
+
+  useEffect(() => {
+    let active = true
+    setStartupFit(null)
+
+    if (!openSafeSelection) return () => { active = false }
+
+    fetch('/api/scenario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        dong_code: String(openSafeSelection.dongCode),
+        industry_code: String(openSafeSelection.industryCode),
+        dong_name: openSafeSelection.dongName,
+        industry_name: openSafeSelection.industryName,
+      }),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('startup-fit unavailable')
+        return response.json()
+      })
+      .then((data) => {
+        if (!active) return
+        const score = Number(data?.startup_fit_score ?? data?.fs)
+        const label = data?.startup_fit_label ?? data?.fl ?? ''
+        if (Number.isFinite(score)) setStartupFit({ score, label })
+      })
+      .catch(() => {
+        if (active) setStartupFit(null)
+      })
+
+    return () => { active = false }
+  }, [dongCode, analysisIndustryCode])
 
   return (
     <main className="detail-workspace">
@@ -112,9 +169,20 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
         </aside>
 
         <section className="dashboard-detail-container">
-          <div className="dashboard-detail-heading"><span>상세 분석</span><h2>시장 진단</h2><p>상권 위치, 시장 유형과 최근 개폐업 흐름을 함께 읽습니다.</p></div>
+          <div className="dashboard-detail-heading">
+            <span>상세 분석</span>
+            <h2>{activeTab === 'market' ? '시장 진단' : 'AI 창업 분석'}</h2>
+            <p>{activeTab === 'market'
+              ? '상권 위치, 시장 유형과 최근 개폐업 흐름을 함께 읽습니다.'
+              : '선택한 행정동과 업종의 12개월 운영 시나리오 및 근거 기반 창업 코치를 확인합니다.'}</p>
+          </div>
+          <div className="dashboard-tabs" role="tablist" aria-label="상세 분석 탭">
+            <button type="button" role="tab" aria-selected={activeTab === 'market'} className={activeTab === 'market' ? 'active' : ''} onClick={() => setActiveTab('market')}>시장 진단</button>
+            <button type="button" role="tab" aria-selected={activeTab === 'map-analysis'} className={activeTab === 'map-analysis' ? 'active' : ''} onClick={() => setActiveTab('map-analysis')}>AI 창업 분석</button>
+          </div>
 
-          <div className="dashboard-analysis-grid">
+          <div className="dashboard-tab-panel" role="tabpanel">
+          {activeTab === 'market' ? <div className="dashboard-analysis-grid">
             <section className="dashboard-analysis-cell dashboard-market-cell">
               <div className="dashboard-cell-heading"><h3>시장 내 위치</h3><span>개업률 × 폐업률</span></div>
               {sampleInsufficient ? <p className="dashboard-empty">표본 부족으로 시장 위치를 표시할 수 없습니다.</p> : marketType ? <MarketQuadrant marketType={marketType} averages={marketData.averages} points={marketData.points} selectedDongCode={dongCode} selectedDongName={info?.name} /> : <p className="dashboard-empty">시장 위치 데이터가 없습니다.</p>}
@@ -140,12 +208,19 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
               {marketType && marketData.averages ? (
                 <div className="dashboard-diagnosis-list">
                   <div><span>현재 시장 유형</span><strong>{marketType.label}</strong></div>
+                  <div><span>창업 적합도</span><strong>{startupFit ? `${startupFit.score.toFixed(0)}점${startupFit.label ? ` · ${startupFit.label}` : ''}` : '분석 데이터 없음'}</strong></div>
                   <div><span>서울 평균 대비 개업률</span><strong className={marketType.openDifference >= 0 ? 'positive' : 'negative'}>{marketType.openDifference > 0 ? '+' : ''}{marketType.openDifference.toFixed(2)}%p</strong></div>
                   <div><span>서울 평균 대비 폐업률</span><strong className={marketType.closureDifference > 0 ? 'negative' : 'positive'}>{marketType.closureDifference > 0 ? '+' : ''}{marketType.closureDifference.toFixed(2)}%p</strong></div>
                 </div>
               ) : <p className="dashboard-empty">시장 진단 근거 데이터가 없습니다.</p>}
-              <p className="dashboard-diagnosis-note">임의 점수 없이 현재 분기의 실제 개업률·폐업률과 서울 평균만 사용합니다.</p>
+              <p className="dashboard-diagnosis-note">시장 유형은 실제 개업률·폐업률과 서울 평균을 기준으로 판단하며, 창업 적합도는 해당 행정동·업종의 AI 분석 데이터가 있을 때 함께 표시합니다.</p>
             </section>
+          </div> : <OpenSafeAnalysis
+            selection={openSafeSelection}
+            industryOptions={industryOptions}
+            selectedIndustryCode={analysisIndustryCode}
+            onIndustryChange={setAnalysisIndustryCode}
+          />}
           </div>
         </section>
       </div>
