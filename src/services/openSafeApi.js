@@ -35,19 +35,16 @@ async function postJson(path, payload, signal) {
   return body
 }
 
+// `dongCode`와 `industryCode`는 min 브랜치의 정적 상권 데이터에서 얻는다.
+// API에는 표시명 대신 코드만 전송해 OpenSafe dashboard-data.json과 정확히 JOIN한다.
 export function buildOpenSafePayload(selection, inputs = DEFAULT_OPENSAFE_INPUTS) {
   if (!selection?.dongCode || !selection?.industryCode) {
     throw new Error('행정동과 업종을 모두 선택해야 AI 분석을 실행할 수 있습니다.')
   }
 
   return {
-    dong_code: String(selection.dongCode).trim(),
-    industry_code: String(selection.industryCode).trim(),
-
-    // 코드 체계가 분석 데이터와 다를 때 백엔드가 이름으로 재매칭할 수 있도록 함께 전송한다.
-    dong_name: String(selection.dongName || '').trim(),
-    industry_name: String(selection.industryName || '').trim(),
-
+    dong_code: String(selection.dongCode),
+    industry_code: String(selection.industryCode),
     rent_manwon: toFiniteNumber(inputs.rent_manwon, DEFAULT_OPENSAFE_INPUTS.rent_manwon),
     other_fixed_manwon: toFiniteNumber(inputs.other_fixed_manwon, DEFAULT_OPENSAFE_INPUTS.other_fixed_manwon),
     variable_cost_rate: toFiniteNumber(inputs.variable_cost_rate, DEFAULT_OPENSAFE_INPUTS.variable_cost_rate),
