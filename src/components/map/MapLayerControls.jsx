@@ -14,7 +14,6 @@ export default function MapLayerControls({ visibleLayers, onToggle }) {
             checked={visibleLayers[layer.key]}
             onChange={() => onToggle(layer.key)}
           />
-          <span className={`layer-swatch layer-${layer.key}`} aria-hidden="true" />
           <span>{layer.label}</span>
         </label>
       ))}

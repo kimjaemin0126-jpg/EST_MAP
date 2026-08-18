@@ -17,7 +17,7 @@ export default function FilterBar({
   onAnalysisModeChange,
 }) {
   return (
-    <div className="filter-bar" aria-label="데이터 필터">
+    <div className="filter-bar filter-bar-compact" aria-label="데이터 필터">
       <label className="filter-field">
         <span className="sr-only">기준 분기</span>
         <select value={selectedQuarter} onChange={(event) => onQuarterChange(event.target.value)}>

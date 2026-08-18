@@ -13,7 +13,6 @@ export default function MapLegend({ mode, thresholds }) {
     <div className="map-legend" aria-label={`${config.title} 범례`}>
       <div className="legend-heading">
         <strong>{config.title}</strong>
-        <span className="legend-info" title={mode === ANALYSIS_MODES.MARKET_TYPE ? '서울 평균을 기준으로 분류합니다.' : '현재 조건의 서울 행정동 분포를 기준으로 구간을 나눕니다.'} aria-label="범례 기준 설명">ⓘ</span>
       </div>
       <div className="legend-scale">
         {config.levels.map((level) => <span className="legend-swatch" key={level.key} style={{ backgroundColor: level.color }} />)}

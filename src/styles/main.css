@@ -932,3 +932,100 @@ button, select { font: inherit; }
   font-size: 11px;
   line-height: 1.5;
 }
+
+
+/* ===== UI cleanup requested 2026-08-19 ===== */
+
+/* 1) Leaflet zoom: keep it at the map's bottom-right and away from edge overlays */
+.map-wrap .leaflet-bottom.leaflet-right {
+  right: 18px;
+  bottom: 18px;
+}
+.map-wrap .leaflet-bottom.leaflet-right .leaflet-control {
+  margin: 0;
+}
+
+/* 2) Layer controls: checkbox + text only (decorative swatches removed in JSX) */
+.map-layer-controls label {
+  gap: 7px;
+}
+.layer-swatch {
+  display: none !important;
+}
+
+/* 3) Legend information icon removed in JSX; keep heading aligned */
+.legend-heading {
+  justify-content: flex-start;
+}
+.legend-info {
+  display: none !important;
+}
+
+/* 4) Connect the market-diagnosis grid divider lines cleanly */
+.dashboard-analysis-grid {
+  column-gap: 0;
+}
+.dashboard-analysis-cell {
+  padding: 18px 24px;
+}
+.dashboard-analysis-cell:nth-child(odd) {
+  padding-left: 0;
+}
+.dashboard-analysis-cell:nth-child(even) {
+  padding-left: 24px;
+  padding-right: 0;
+  border-left: 1px solid #e7ebe8;
+}
+.dashboard-analysis-cell:nth-child(n + 3) {
+  border-top: 1px solid #e7ebe8;
+}
+
+/* 5) Quadrant labels: consistent centering / wrapping */
+.dashboard-quadrant-grid > div {
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px;
+  text-align: center;
+}
+.dashboard-quadrant-grid span {
+  width: 100%;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: clip;
+  line-height: 1.35;
+  text-align: center;
+}
+.dashboard-quadrant-grid em {
+  top: 9px;
+  right: 10px;
+}
+
+/* 6) Reduce unnecessary header/filter whitespace */
+.filter-bar-compact {
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+.filter-bar-compact .filter-field,
+.filter-bar-compact .analysis-mode-field {
+  margin: 0;
+}
+.filter-bar-compact .filter-field select {
+  margin: 0;
+}
+.app-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* 7) Scatterplot peer points */
+.dashboard-market-cell .quadrant-peer-point {
+  fill: #728078;
+  fill-opacity: .34;
+  stroke: rgba(255, 255, 255, .82);
+  stroke-width: 1;
+}
+.dashboard-market-cell .quadrant-peer-point:hover {
+  fill-opacity: .72;
+  r: 5px;
+}

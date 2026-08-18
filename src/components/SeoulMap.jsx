@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
-import { GeoJSON, MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { GeoJSON, MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import useSeoulMapData from '../hooks/useSeoulMapData'
 import {
@@ -297,7 +297,8 @@ export default function SeoulMap({
 
   return (
     <section className="map-wrap" aria-label="서울 행정동 상권 분석 및 폐업 위치 지도">
-      <MapContainer ref={mapRef} center={[37.5665, 126.978]} zoom={11} className="seoul-map">
+      <MapContainer ref={mapRef} center={[37.5665, 126.978]} zoom={11} zoomControl={false} className="seoul-map">
+        <ZoomControl position="bottomright" />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
