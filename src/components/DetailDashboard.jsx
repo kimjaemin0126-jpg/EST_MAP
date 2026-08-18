@@ -208,7 +208,7 @@ export default function DetailDashboard({ dongCode, quarter, industry, processed
             </section>
 
             <section className="dashboard-analysis-cell dashboard-basis-cell">
-              <div className="dashboard-cell-heading"><h3>시장 진단 근거</h3><span>실제 개폐업 지표</span></div>
+              <div className="dashboard-cell-heading"><h3>창업 적합도</h3><span>시장 진단 지표</span></div>
               {marketType && marketData.averages ? (
                 <div className="dashboard-diagnosis-list">
                   <div><span>현재 시장 유형</span><strong>{marketType.label}</strong></div>

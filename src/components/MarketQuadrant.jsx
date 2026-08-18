@@ -20,7 +20,6 @@ function getPosition(openRate, closureRate, averages) {
 export default function MarketQuadrant({
   marketType,
   averages,
-  points = [],
   selectedDongCode,
   selectedDongName,
 }) {
@@ -43,15 +42,6 @@ export default function MarketQuadrant({
         <text x={(CENTER_X + PLOT.right) / 2} y={PLOT.top + 22} textAnchor="middle" className="quadrant-type-label">고경쟁·고회전형</text>
         <text x={(PLOT.left + CENTER_X) / 2} y={PLOT.bottom - 14} textAnchor="middle" className="quadrant-type-label">안정 유지형</text>
         <text x={(CENTER_X + PLOT.right) / 2} y={PLOT.bottom - 14} textAnchor="middle" className="quadrant-type-label">진입활발·저폐업형</text>
-
-        {points.filter((point) => point.code !== selectedDongCode).map((point) => {
-          const position = getPosition(point.openRate, point.closureRate, averages)
-          return (
-            <circle key={point.code} cx={position.x} cy={position.y} r="4" className="quadrant-peer-point">
-              <title>{`${point.name}\n개업률 ${point.openRate.toFixed(2)}%\n폐업률 ${point.closureRate.toFixed(2)}%\n${point.label || '시장 유형 데이터 없음'}`}</title>
-            </circle>
-          )
-        })}
 
         <circle cx={selected.x} cy={selected.y} r="15" className="quadrant-selected-halo" />
         <circle cx={selected.x} cy={selected.y} r="10" className="quadrant-point">

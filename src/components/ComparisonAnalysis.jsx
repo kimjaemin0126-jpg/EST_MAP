@@ -200,8 +200,8 @@ export default function ComparisonAnalysis({ baseDongCode, processed, initialInd
 
       {!compared ? <div className="compare-empty"><strong>두 지역을 같은 기준으로 비교합니다.</strong><span>비교 지역과 공통 업종을 선택한 뒤 비교 버튼을 눌러주세요.</span></div> : (
         <div className="compare-results">
-          {radarMetrics.length > 0 && <MarketRadarComparison leftName={baseDong?.name || '지역 A'} rightName={targetDong?.name || '지역 B'} metrics={radarMetrics} />}
           {analysis && <AiMetricComparison leftName={baseDong?.name || '지역 A'} rightName={targetDong?.name || '지역 B'} leftAi={analysis.left} rightAi={analysis.right} />}
+          {radarMetrics.length > 0 && <MarketRadarComparison leftName={baseDong?.name || '지역 A'} rightName={targetDong?.name || '지역 B'} metrics={radarMetrics} />}
         </div>
       )}
     </div>
