@@ -2,12 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Header from './components/Header'
 import SeoulMap from './components/SeoulMap'
 import DongDetailPanel from './components/DongDetailPanel'
+import DetailDashboard from './components/DetailDashboard'
 import { DATA_PATHS } from './config/dataPaths'
 import {
   fetchJsonCached,
   mergeMarketContext,
   mergeProcessedData,
 } from './services/staticDataService'
+import { getIndustryCode } from './services/dataService'
 import {
   ALL_INDUSTRIES,
   ANALYSIS_MODES,
@@ -22,12 +24,13 @@ export default function App() {
   const [analysisMode, setAnalysisMode] = useState(ANALYSIS_MODES.CLOSURE_RATE)
   const [selectedDongCode, setSelectedDongCode] = useState(null)
   const [selectedDistrict, setSelectedDistrict] = useState(null)
+  const [viewMode, setViewMode] = useState('map')
   const [processed, setProcessed] = useState({})
-  const [marketContext, setMarketContext] = useState({})
+  const [, setMarketContext] = useState({})
   const [loadingQuarters, setLoadingQuarters] = useState(new Set())
   const [attemptedQuarters, setAttemptedQuarters] = useState(new Set())
   const [quarterErrors, setQuarterErrors] = useState({})
-  const [contextErrors, setContextErrors] = useState({})
+  const [, setContextErrors] = useState({})
   const loadedStoreQuartersRef = useRef(new Set())
   const loadedContextQuartersRef = useRef(new Set())
   const inFlightQuartersRef = useRef(new Set())
@@ -88,7 +91,20 @@ export default function App() {
   const requiredDataLoading = AVAILABLE_QUARTERS.some((quarter) => loadingQuarters.has(quarter))
   const selectedQuarterLabel = `${selectedQuarter.slice(0, 4)}년 ${selectedQuarter.slice(4)}분기`
   const selectedQuarterError = quarterErrors[selectedQuarter]
-  const selectedContextError = contextErrors[selectedQuarter] || ''
+  const openSafeSelection = useMemo(() => {
+    if (!selectedDongCode || selectedIndustry === ALL_INDUSTRIES) return null
+    const dong = processed[selectedDongCode]
+    const industryCode = getIndustryCode(processed, selectedQuarter, selectedDongCode, selectedIndustry)
+    if (!dong?.name || !industryCode) return null
+    return {
+      dongCode: String(selectedDongCode),
+      dongName: dong.name,
+      industryCode,
+      industryName: selectedIndustry,
+      quarter: selectedQuarter,
+      quarterLabel: selectedQuarterLabel,
+    }
+  }, [processed, selectedDongCode, selectedIndustry, selectedQuarter, selectedQuarterLabel])
 
   const handleSelectDong = useCallback((dongCode) => {
     setSelectedDistrict(null)
@@ -100,23 +116,47 @@ export default function App() {
   }, [])
 
   const handleSelectDistrict = useCallback((districtName) => {
-    setSelectedDongCode(null)
     setSelectedDistrict(districtName)
+    if (districtName) setSelectedDongCode(null)
+    setViewMode('map')
   }, [])
+
+  const handleAnalysisModeChange = useCallback((nextMode) => {
+    setAnalysisMode(nextMode)
+    setViewMode('map')
+  }, [])
+
+  const handleOpenDetail = useCallback(() => {
+    if (openSafeSelection) setViewMode('detail')
+  }, [openSafeSelection])
+  const handleReturnToMap = useCallback(() => setViewMode('map'), [])
+
+  const detailViewActive = viewMode === 'detail' && Boolean(selectedDongCode)
 
   return (
     <div className="app-root">
       <Header
+        detailMode={detailViewActive}
+        onReturnToMap={handleReturnToMap}
         selectedQuarter={selectedQuarter}
         onQuarterChange={setSelectedQuarter}
         selectedIndustry={selectedIndustry}
         onIndustryChange={setSelectedIndustry}
         industries={industries}
         analysisMode={analysisMode}
-        onAnalysisModeChange={setAnalysisMode}
+        onAnalysisModeChange={handleAnalysisModeChange}
       />
       {!initialLoadFinished ? (
         <div className="app-loading"><span className="loading-spinner" />상권 데이터를 불러오는 중입니다...</div>
+      ) : detailViewActive ? (
+        <DetailDashboard
+          dongCode={selectedDongCode}
+          quarter={selectedQuarter}
+          industry={selectedIndustry}
+          processed={processed}
+          openSafeSelection={openSafeSelection}
+          onReturnToMap={handleReturnToMap}
+        />
       ) : (
         <main className="app-main">
           <SeoulMap
@@ -129,6 +169,7 @@ export default function App() {
             onSelectDong={handleSelectDong}
             onSelectClosureDong={handleSelectClosureDong}
             onSelectDistrict={handleSelectDistrict}
+            detailLayoutOpen={false}
           />
           <DongDetailPanel
             dongCode={selectedDongCode}
@@ -136,8 +177,8 @@ export default function App() {
             industry={selectedIndustry}
             analysisMode={analysisMode}
             processed={processed}
-            marketContext={marketContext}
-            contextError={selectedContextError}
+            onOpenDetail={handleOpenDetail}
+            canOpenDetail={Boolean(openSafeSelection)}
           />
           {requiredDataLoading && (
             <div className="quarter-data-status loading"><span className="loading-spinner" />데이터를 불러오는 중입니다</div>
